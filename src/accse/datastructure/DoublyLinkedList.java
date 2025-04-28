@@ -45,6 +45,7 @@ public class DoublyLinkedList<E> implements PositionList<E>{
 		return null;
 	}
 
+	
 	@Override
 	public Position<E> before(Position<E> p) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
@@ -99,37 +100,66 @@ public class DoublyLinkedList<E> implements PositionList<E>{
 	@Override
 	public Position<E> first() {
 		// TODO Auto-generated method stub
-		return null;
+		if(header.getNext()==trailer)
+			return null;
+		return header.getNext();
 	}
 
 	@Override
 	public Position<E> last() {
 		// TODO Auto-generated method stub
-		
-		return null;
+		if(trailer.getPrev()==header)
+			return null;
+		return trailer.getPrev();
 	}
 
 	@Override
 	public Position<E> addBefore(Position<E> p, E e) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		if(!(p instanceof Node))throw new IllegalArgumentException("Invalid p");
+		Node<E> node= (Node<E>)p;
+		if(node.getNext()==null)throw new IllegalArgumentException("p is no longer in the list");
+		
+		return addBetween(e,node.getPrev(),node);
 	}
 
 	@Override
 	public Position<E> addAfter(Position<E> p, E e) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		if(!(p instanceof Node))throw new IllegalArgumentException("Invalid p");
+		Node<E> node= (Node<E>)p;
+		if(node.getNext()==null)throw new IllegalArgumentException("p is no longer in the list");
+		
+		return addBetween(e,node,node.getNext());
+		
 	}
 
 	@Override
 	public E set(Position<E> p, E e) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		if(!(p instanceof Node))throw new IllegalArgumentException("Invalid p");
+		Node<E> node= (Node<E>)p;
+		if(node.getNext()==null)throw new IllegalArgumentException("p is no longer in the list");
+		E answer = node.getElemeent();
+		node.setElement(e);
+		return answer;
 	}
 
 	@Override
 	public E remove(Position<E> p) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		if(!(p instanceof Node))throw new IllegalArgumentException("Invalid p");
+		Node<E> node= (Node<E>)p;
+		if(node.getNext()==null)throw new IllegalArgumentException("p is no longer in the list");
+		Node<E>predecessor=node.getPrev();
+		Node<E>successor=node.getNext();
+		predecessor.setNext(successor);
+		successor.setPrev(predecessor);
+		size--;
+		E answer= node.getElemeent();
+		node.setElement(null);
+		node.setNext(null);
+		node.setPrev(null);
+		return answer;
 	}
 }
