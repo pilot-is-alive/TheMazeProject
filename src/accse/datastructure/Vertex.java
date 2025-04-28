@@ -1,13 +1,13 @@
 package accse.datastructure;
 
-public class Vertex {
+public class Vertex<E> {
 
-	String label;
+	E node;
 	PositionList<Edge> adjacencyList;
 	
-	public Vertex(String label)
+	public Vertex(E node)
 	{
-		this.label=label;
+		this.node=node;
 		this.adjacencyList= new DoublyLinkedList<>();
 		
 	}
