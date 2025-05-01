@@ -11,4 +11,8 @@ public class Vertex<E> {
 		this.adjacencyList= new DoublyLinkedList<>();
 		
 	}
+	
+	public PositionList<Edge> getEdges() {
+		return adjacencyList;
+	}
 }
