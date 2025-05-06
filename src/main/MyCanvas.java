@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 public class MyCanvas extends Canvas {
@@ -25,7 +26,9 @@ public class MyCanvas extends Canvas {
 	public void render() {
 		gc.clearRect(0, 0, this.getWidth(), this.getHeight());
 		for(Line line: lines) {
+			gc.setFill(Color.BLACK);
 			gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+			
 		}
 	}
 	
