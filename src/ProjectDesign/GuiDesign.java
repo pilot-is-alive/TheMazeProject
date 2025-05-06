@@ -86,8 +86,6 @@ public class GuiDesign extends Application {
         GridPane.setHalignment(centerPane, javafx.geometry.HPos.CENTER);
         GridPane.setValignment(centerPane, javafx.geometry.VPos.CENTER);
 
-
-        
         grid.add(leftPanel, 0, 0);
         grid.add(centerPane, 1, 0);
         grid.add(rightPanel, 2, 0);
