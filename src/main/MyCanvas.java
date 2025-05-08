@@ -18,19 +18,33 @@ public class MyCanvas extends Canvas {
 		gc = super.getGraphicsContext2D();
 		currentLine = new Line();
 		lines = new Vector<Line>();
+		render();//added
 		super.setOnMouseDragEntered(new MouseDragEnteredHandler());
 		super.setOnMouseDragExited(new MouseDragExitHandler());
 		super.setOnMouseDragged(new MouseDraggedHandler());
+		
 	}
 	
 	public void render() {
-		gc.clearRect(0, 0, this.getWidth(), this.getHeight());
-		for(Line line: lines) {
-			gc.setFill(Color.BLACK);
-			gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
-			
+		/*
+		 * gc.clearRect(0, 0, this.getWidth(), this.getHeight()); for(Line line: lines)
+		 * {
+		 * 
+		 * gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(),
+		 * line.getEndY());
+		 * 
+		 * } gc.setFill(Color.BLACK);
+		 */
+			//Commented out the previous code
+		    gc.setFill(Color.WHITE); // or any other visible color
+		    gc.fillRect(0, 0, this.getWidth(), this.getHeight()); // fill background
+
+		    gc.setStroke(Color.WHITE);
+		    for (Line line : lines) {
+		        gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+		    }
 		}
-	}
+	
 	
 	public void renderDraggedLine() {
 		render();
