@@ -62,7 +62,8 @@ public class GuiDesign extends Application {
 		undoView.setFitWidth(20);
 		Undobtn.setGraphic(undoView);
 		
-		//Button exitbtn = new Button("Exit");
+		Button exitbtn = new Button("Exit");
+		
 		Button Startbtn = new Button("Start");
 		Startbtn.setPrefWidth(120);
 		Startbtn.setPrefHeight(40);
