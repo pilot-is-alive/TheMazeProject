@@ -8,59 +8,59 @@ import java.util.Set;
 
 public class Graph<E> 
 {
-	public Map<E, List<E>> hashMap;
+	public Map<E, List<E>> adjList;
 	
 	public Graph()
 	{
-		hashMap = new HashMap<>();
+		adjList = new HashMap<>();
 	}
 	
 	public void insertVertex(E node)
 	{
-		if(!(hashMap.containsKey(node)))
+		if(!(adjList.containsKey(node)))
 		{
-			hashMap.putIfAbsent(node, new ArrayList<>());
+			adjList.putIfAbsent(node, new ArrayList<>());
 		}
 	}
 	
 	public void insertEdge(E from, E to)
 	{
 		
-		if(hashMap.containsKey(from) && hashMap.containsKey(to))
+		if(adjList.containsKey(from) && adjList.containsKey(to))
 		{
-			hashMap.get(from).add(to);
-			hashMap.get(to).add(from);
+			adjList.get(from).add(to);
+			adjList.get(to).add(from);
 		}
 	}
 	
 	public void removeVertex(E node)
 	{
-		if(hashMap.containsKey(node))
+		if(adjList.containsKey(node))
 		{
-			for(E nodeNeighbour : hashMap.get(node))
+			for(E nodeNeighbour : adjList.get(node))
 			{
-				hashMap.get(nodeNeighbour).remove(node);
+				adjList.get(nodeNeighbour).remove(node);
 			}
-			hashMap.remove(node);
+			adjList.remove(node);
 		}
 	}
 	
 	public void removeEdge(E from, E to)
 	{
-		if(hashMap.containsKey(from) && hashMap.containsKey(to))
+		if(adjList.containsKey(from) && adjList.containsKey(to))
 		{
-			hashMap.get(from).remove(to);
-			hashMap.get(to).remove(from);
+			adjList.get(from).remove(to);
+			adjList.get(to).remove(from);
 		}
 	}
 	
 	public List<E> getNodeNeighbours(E node)
 	{
-		return hashMap.getOrDefault(node, new ArrayList<>());
+		return adjList.getOrDefault(node, new ArrayList<>());
 	}
 	
 	public Set<E> getVertices()
 	{
-		return hashMap.keySet();
+		return adjList.keySet();
 	}
 }
