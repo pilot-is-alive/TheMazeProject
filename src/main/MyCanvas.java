@@ -1,7 +1,6 @@
 package main;
 
 import java.util.Vector;
-
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,39 +14,35 @@ public class MyCanvas extends Canvas {
 	private Vector<Line> lines;
 	
 	public MyCanvas() {
+		System.out.println("Create my canvas");
 		gc = super.getGraphicsContext2D();
 		currentLine = new Line();
 		lines = new Vector<Line>();
-		render();//added
-		super.setOnMouseDragEntered(new MouseDragEnteredHandler());
-		super.setOnMouseDragExited(new MouseDragExitHandler());
-		super.setOnMouseDragged(new MouseDraggedHandler());
-		
+		super.setOnMousePressed(new MouseDragEnteredHandler());
+		super.setOnMouseReleased(new MouseDragExitHandler());
+		this.setOnMouseDragged(new MouseDraggedHandler());
+		System.out.println("Canvas created");
+		clearCanvas();
+	}
+	
+	public void clearCanvas() {
+		gc.setFill(Color.WHITE); // or any other visible color
+	    gc.fillRect(0, 0, this.getWidth(), this.getHeight()); // fill background
 	}
 	
 	public void render() {
-		/*
-		 * gc.clearRect(0, 0, this.getWidth(), this.getHeight()); for(Line line: lines)
-		 * {
-		 * 
-		 * gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(),
-		 * line.getEndY());
-		 * 
-		 * } gc.setFill(Color.BLACK);
-		 */
-			//Commented out the previous code
-		    gc.setFill(Color.WHITE); // or any other visible color
-		    gc.fillRect(0, 0, this.getWidth(), this.getHeight()); // fill background
+		System.out.println("render...");
+		clearCanvas();
 
-		    gc.setStroke(Color.WHITE);
-		    for (Line line : lines) {
-		        gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
-		    }
-		}
-	
+	    gc.setStroke(Color.BLACK);
+	    for (Line line : lines) {
+	        gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+	    }
+	}
 	
 	public void renderDraggedLine() {
 		render();
+		gc.setStroke(Color.BLACK);
 		gc.strokeLine(currentLine.getStartX(), currentLine.getStartY(), currentLine.getEndX(), currentLine.getEndY());
 	}
 	
@@ -56,16 +51,6 @@ public class MyCanvas extends Canvas {
 		Line removedLine = lines.removeLast();
 		render();
 		return removedLine;
-	}
-	
-	class MouseDragEnteredHandler implements EventHandler<MouseEvent> {
-		@Override
-		public void handle(MouseEvent event) {
-			currentLine =  new Line();
-			currentLine.setStartX(event.getX());
-			currentLine.setStartY(event.getY());
-			renderDraggedLine();
-		}
 	}
 	
 	class MouseDraggedHandler implements EventHandler<MouseEvent> {
@@ -77,9 +62,23 @@ public class MyCanvas extends Canvas {
 		}
 	}
 	
+	class MouseDragEnteredHandler implements EventHandler<MouseEvent> {
+		@Override
+		public void handle(MouseEvent event) {
+			System.out.println(event.getEventType().getName());
+			currentLine =  new Line();
+			currentLine.setStartX(event.getX());
+			currentLine.setStartY(event.getY());
+			currentLine.setEndX(event.getX());
+			currentLine.setEndY(event.getY());
+			renderDraggedLine();
+		}
+	}
+	
 	class MouseDragExitHandler implements EventHandler<MouseEvent> {
 		@Override
 		public void handle(MouseEvent event) {
+			System.out.println("Exiting drag");
 			currentLine.setEndX(event.getX());
 			currentLine.setEndY(event.getY());
 			lines.add(currentLine);
