@@ -36,8 +36,8 @@ public class Graph<E>
 	 * A method where a weighted & undirected edge is added between two existing vertices.
 	 * The edge gets added in both directions to indicate an undirected graph.
 	 * 
-	 * @param from The starting vertex.
-	 * @param to The ending vertex.
+	 * @param from The starting edge.
+	 * @param to The ending edge.
 	 * @param weight The weight of the edge.
 	 */
 	public void insertEdge(E from, E to, Double weight)
@@ -73,10 +73,10 @@ public class Graph<E>
 	}
 	
 	/*
-	 * A method where, if an edge between two vertices exists, is removed.
+	 * A method where, if an edge between two vertices exists, it is removed.
 	 * 
-	 * @param from The source vertex.
-	 * @param to The target vertex.
+	 * @param from The source edge.
+	 * @param to The target edge.
 	 */
 	public void removeEdge(E from, E to)
 	{
@@ -134,9 +134,9 @@ public class Graph<E>
 	/*
 	 * A method that checks if an edge exists between two vertices.
 	 * 
-	 * @param from The source vertex.
-	 * @param to The destination vertex.
-	 * @return True of the edge exists or False if otherwise.
+	 * @param from The source edge.
+	 * @param to The destination edge.
+	 * @return True if the edge exists or False if otherwise.
 	 */
 	public boolean hasEdgeWeight(E from, E to)
 	{
@@ -153,3 +153,4 @@ public class Graph<E>
 		return adjList.keySet();
 	}
 }
+
