@@ -140,7 +140,7 @@ public class DoublyLinkedList<E> implements PositionList<E>{
 		if(!(p instanceof Node))throw new IllegalArgumentException("Invalid p");
 		Node<E> node= (Node<E>)p;
 		if(node.getNext()==null)throw new IllegalArgumentException("p is no longer in the list");
-		E answer = node.getElemeent();
+		E answer = node.getElement();
 		node.setElement(e);
 		return answer;
 	}
@@ -156,7 +156,7 @@ public class DoublyLinkedList<E> implements PositionList<E>{
 		predecessor.setNext(successor);
 		successor.setPrev(predecessor);
 		size--;
-		E answer= node.getElemeent();
+		E answer= node.getElement();
 		node.setElement(null);
 		node.setNext(null);
 		node.setPrev(null);

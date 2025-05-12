@@ -16,6 +16,7 @@ public class MyCanvas extends Canvas {
 	
 	public MyCanvas() {
 		gc = super.getGraphicsContext2D();
+		
 		currentLine = new Line();
 		lines = new Vector<Line>();
 		super.setOnMouseDragEntered(new MouseDragEnteredHandler());
@@ -26,7 +27,7 @@ public class MyCanvas extends Canvas {
 	public void render() {
 		gc.clearRect(0, 0, this.getWidth(), this.getHeight());
 		for(Line line: lines) {
-			gc.setFill(Color.BLACK);
+			
 			gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
 			
 		}

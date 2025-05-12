@@ -7,6 +7,6 @@ public interface Position <E>{
 	 * @return the Stored element
 	 * @throws IllegalStateException
 	 */
-	E getElemeent() throws IllegalStateException;
+	E getElement() throws IllegalStateException;
 
 }
