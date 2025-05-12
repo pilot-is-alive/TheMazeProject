@@ -21,6 +21,7 @@ public class MyCanvas extends Canvas {
 		
 		System.out.println("Create my canvas");
 		gc = super.getGraphicsContext2D();
+		
 		currentLine = new Line();
 		lines = new Vector<Line>();
 		super.setOnMousePressed(new MouseDragEnteredHandler());
@@ -41,6 +42,7 @@ public class MyCanvas extends Canvas {
 	}
 	
 	public void render() {
+
 		System.out.println("render...");
 		clearCanvas();
 		//Draw the image first, if it exists
@@ -56,6 +58,13 @@ public class MyCanvas extends Canvas {
 	    for (Line line : lines) {
 	        gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
 	    }
+
+		gc.clearRect(0, 0, this.getWidth(), this.getHeight());
+		for(Line line: lines) {
+			
+			gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+			
+		}
 	}
 	
 	public void renderDraggedLine() {

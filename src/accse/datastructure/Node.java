@@ -48,7 +48,7 @@ public class Node<E> implements Position<E>{
 	 * @return the element
 	 */
 	@Override
-	public E getElemeent() throws IllegalStateException {
+	public E getElement() throws IllegalStateException {
 		// TODO Auto-generated method stub
 		if(next==null)
 			throw new IllegalStateException("Position no longer valid");
