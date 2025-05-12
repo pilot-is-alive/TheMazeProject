@@ -123,6 +123,7 @@ public class GuiDesign extends Application {
 		 primaryStage.setTitle("Home Invader Simulator ");
 		 primaryStage.setScene(scene);
 		 primaryStage.show();
+		 Canvas.render();
 	}
 	
 
