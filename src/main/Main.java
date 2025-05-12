@@ -1,13 +1,13 @@
 package main;
 
-import ProjectDesign.GuiDesign;
+import ProjectDesign.UserInterface;
 import javafx.application.Application;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-		Application.launch(GuiDesign.class, args);
+		Application.launch(UserInterface.class, args);
 	}
 	
 
