@@ -23,9 +23,12 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.DrawChoice;
+import main.GraphConverter;
 import main.MyCanvas;
 
 public class UserInterface extends Application {
+	
+	private GraphConverter converter = null;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -82,6 +85,11 @@ public class UserInterface extends Application {
 		Startbtn.setPrefHeight(40);
 		Startbtn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
 		Startbtn.setStyle("-fx-background-color: Lightgreen; -fx-text-fill: white;");
+		Startbtn.setOnAction(e -> {
+			converter =  new GraphConverter();
+			converter.createGraphFromCanvas(Canvas);
+			
+		});
 		
 		Button resetBtn = new Button("Reset");
 		resetBtn.setOnAction(e->{
