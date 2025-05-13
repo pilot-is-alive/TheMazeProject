@@ -17,7 +17,8 @@ public class MyCanvas extends Canvas {
 	private Vector<Rectangle> intruders;
 	private Rectangle escaper;
 	private DrawChoice choice;
-	private  final double squareSideLength = 20;
+	private final double squareSideLength = 20;
+	private final double lineWeight = 3;
 	private Image backgroundImage;
 	
 	public MyCanvas() {
@@ -59,6 +60,7 @@ public class MyCanvas extends Canvas {
 	        gc.drawImage(backgroundImage, 0, 0, getWidth(), getHeight());
 	    }
 	    gc.setStroke(Color.BLACK);
+	    gc.setLineWidth(lineWeight);
 	    for (Line line : lines) {
 	        gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
 	    }
