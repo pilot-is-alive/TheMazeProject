@@ -20,6 +20,10 @@ public class GraphConverter {
 		pixelColorMap = new HashMap<>();
 	}
 	
+	public Graph<PixelCoordinate> getGraph() {
+		return HouseGraph;
+	}
+	
 	public void createGraphFromCanvas(MyCanvas canvas) {
 		WritableImage image = canvas.snapshot(null, null);
 		PixelReader pixIn = image.getPixelReader();
