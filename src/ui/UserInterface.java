@@ -22,6 +22,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import main.DrawChoice;
 import main.MyCanvas;
 
 public class UserInterface extends Application {
@@ -46,6 +47,9 @@ public class UserInterface extends Application {
 		wallView.setFitHeight(25);
 		wallView.setFitWidth(25);
 		Wallbtn.setGraphic(wallView);
+		Wallbtn.setOnAction(e -> {
+			Canvas.drawChoice(DrawChoice.WALL);
+		});
 		
 		Button Invaderbtn = new Button("Invader");
 		Invaderbtn.setPrefWidth(200);
@@ -55,6 +59,9 @@ public class UserInterface extends Application {
 		inView.setFitHeight(30);
 		inView.setFitWidth(30);
 		Invaderbtn.setGraphic(inView);
+		Invaderbtn.setOnAction(e -> {
+			Canvas.drawChoice(DrawChoice.INTRUDER);
+		});
 		
 		Button Homeownerbtn = new Button("Homeowner");
 		Homeownerbtn.setPrefWidth(200);
@@ -64,6 +71,9 @@ public class UserInterface extends Application {
 		homeView.setFitHeight(30);
 		homeView.setFitWidth(30);
 		Homeownerbtn.setGraphic(homeView);
+		Homeownerbtn.setOnAction(e -> {
+			Canvas.drawChoice(DrawChoice.ESCAPER);
+		});
 		
 		Button exitbtn = new Button("Exit");
 		
@@ -75,7 +85,7 @@ public class UserInterface extends Application {
 		
 		Button resetBtn = new Button("Reset");
 		resetBtn.setOnAction(e->{
-			Canvas.clearCanvas();
+			Canvas.reset();
 			
 		});
 	    Button saveBtn = new Button("Save Map");
