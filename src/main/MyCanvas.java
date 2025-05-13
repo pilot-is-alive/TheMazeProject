@@ -67,6 +67,12 @@ public class MyCanvas extends Canvas {
 	    for (Rectangle intruder: intruders) {
 			gc.fillRect(intruder.getX(), intruder.getY(), intruder.getWidth(), intruder.getHeight());
 		}
+	    
+	    if (escaper != null) {
+	    	gc.setFill(Color.BLUE);
+	    	gc.fillRect(escaper.getX(), escaper.getY(), escaper.getWidth(), escaper.getHeight());
+	    }
+	    
 	}
 	
 	public void renderDraggedLine() {
