@@ -1,6 +1,6 @@
 package main;
 
-import ProjectDesign.UserInterface;
+import ui.UserInterface;
 import javafx.application.Application;
 
 public class Main {
