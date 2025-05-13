@@ -20,7 +20,7 @@ public class GraphConverter {
 		pixelColorMap = new HashMap<>();
 	}
 	
-	public void getNodesFromCanvas(MyCanvas canvas) {
+	public void createGraphFromCanvas(MyCanvas canvas) {
 		WritableImage image = canvas.snapshot(null, null);
 		PixelReader pixIn = image.getPixelReader();
 		
