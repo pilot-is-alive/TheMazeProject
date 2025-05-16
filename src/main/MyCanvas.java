@@ -83,11 +83,11 @@ public class MyCanvas extends Canvas {
 		gc.strokeLine(currentLine.getStartX(), currentLine.getStartY(), currentLine.getEndX(), currentLine.getEndY());
 	}
 	
-	public Line undo() {
+	public boolean undo() {
 		if (lines.isEmpty()) return null;
-		Line removedLine = lines.removeLast();
+		boolean removed = lines.remove(lines.lastElement());
 		render();
-		return removedLine;
+		return removed;
 	}
 	
 	/**
