@@ -195,7 +195,7 @@ public class UserInterface extends Application {
 		rootGrid.add(Homeownerbtn, 1, 4);
 		rootGrid.add(Wallbtn, 0, 4);
 
-		Scene scene = new Scene(root, 800, 650);
+		Scene scene = new Scene(rootGrid, 800, 650);
 		primaryStage.setTitle("Home Invader Simulator ");
 		primaryStage.setScene(scene);
 		primaryStage.show();
