@@ -84,7 +84,7 @@ public class MyCanvas extends Canvas {
 	}
 	
 	public boolean undo() {
-		if (lines.isEmpty()) return null;
+		if (lines.isEmpty()) return false;
 		boolean removed = lines.remove(lines.lastElement());
 		render();
 		return removed;
