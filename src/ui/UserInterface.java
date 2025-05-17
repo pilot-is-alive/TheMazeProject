@@ -169,10 +169,10 @@ public class UserInterface extends Application {
 		grid.setPadding(new Insets(10));
 		grid.setHgap(10);
 		grid.setVgap(10);
-		GridPane.setFillWidth(rightPane, false);
+		GridPane.setFillWidth(rightPane, false); 
 		GridPane.setFillHeight(rightPane, false);
-		GridPane.setHalignment(rightPane,javafx.geometry.HPos.CENTER); GridPane.setValignment(rightPane, javafx.geometry.VPos.CENTER);
-
+		GridPane.setHalignment(rightPane,javafx.geometry.HPos.CENTER);
+		GridPane.setValignment(rightPane, javafx.geometry.VPos.CENTER);
 
 		// grid.add(leftPanel, 0, 0);
 
@@ -182,6 +182,18 @@ public class UserInterface extends Application {
 		root.setCenter(canvasWrapper);
 		root.setBottom(Bottompanel);
 		root.setStyle("-fx-background-color: lightblue;");
+		
+		GridPane rootGrid = new GridPane();
+		rootGrid.add(Canvas, 0, 0, 4, 4);
+		rootGrid.add(loadBtn, 4, 0);
+		rootGrid.add(saveBtn, 4, 1);
+		rootGrid.add(resetBtn, 4, 2);
+		rootGrid.add(logArea, 4, 3);
+		rootGrid.add(Startbtn, 4, 4);
+		rootGrid.add(Undobtn, 3, 4);
+		rootGrid.add(Invaderbtn, 2, 4);
+		rootGrid.add(Homeownerbtn, 1, 4);
+		rootGrid.add(Wallbtn, 0, 4);
 
 		Scene scene = new Scene(root, 800, 650);
 		primaryStage.setTitle("Home Invader Simulator ");
