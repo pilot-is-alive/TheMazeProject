@@ -12,9 +12,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -33,14 +36,11 @@ public class UserInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		MyCanvas Canvas = new MyCanvas();
-		Canvas.setWidth(600);
-		Canvas.setHeight(550);
-		Canvas.prefWidth(500);
-		Canvas.prefHeight(500);
-
-		StackPane canvasWrapper = new StackPane(Canvas);
-		canvasWrapper.setPrefSize(500, 500);
-		canvasWrapper.setStyle("-fx-background-color: beige;");
+		Canvas.setWidth(800);
+		Canvas.setHeight(600);
+		Canvas.minWidth(500);
+		Canvas.minHeight(500);
+		//Canvas.minHeight(550);
 
 		Button Wallbtn = new Button("Walls");
 		Wallbtn.setPrefWidth(200);
@@ -78,10 +78,8 @@ public class UserInterface extends Application {
 			Canvas.drawChoice(DrawChoice.ESCAPER);
 		});
 
-		Button exitbtn = new Button("Exit");
-
 		Button Startbtn = new Button("Start");
-		Startbtn.setPrefWidth(120);
+//		Startbtn.setPrefWidth(120);
 		Startbtn.setPrefHeight(40);
 		Startbtn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
 		Startbtn.setStyle("-fx-background-color: Lightgreen; -fx-text-fill: white;");
@@ -94,7 +92,6 @@ public class UserInterface extends Application {
 		Button resetBtn = new Button("Reset");
 		resetBtn.setOnAction(e->{
 			Canvas.reset();
-
 		});
 		Button saveBtn = new Button("Save Map");
 
@@ -126,7 +123,7 @@ public class UserInterface extends Application {
 		Button Undobtn = new Button("Undo");
 		Undobtn.setPrefWidth(200);
 		Undobtn.setPrefHeight(40);
-		Undobtn.setStyle("-fx-background-color: Grey; -fx-text-fill: Black;");
+		Undobtn.setStyle("-fx-text-fill: Black;");
 		Image undoIcon = new Image(getClass().getResourceAsStream("/ProjectDesign/Resources/undo.png"));
 		ImageView undoView = new ImageView(undoIcon);
 		undoView.setFitHeight(20);
@@ -135,7 +132,7 @@ public class UserInterface extends Application {
 
 		TextArea logArea = new TextArea();
 		logArea.setText("Logs, test scores, and error messages...\n");
-		logArea.setPrefWidth(10);
+		// logArea.setPrefWidth(10);
 		logArea.setPrefHeight(200);
 		logArea.setEditable(true);
 
@@ -144,44 +141,26 @@ public class UserInterface extends Application {
 			logArea.appendText("Undo last line.\n");
 		});
 
-
-		HBox Bottompanel = new HBox(10, Wallbtn, Invaderbtn, Homeownerbtn, Undobtn);
-		Bottompanel.setAlignment(Pos.CENTER);
-		Bottompanel.setPadding(new Insets(0));
-
-		Region srtspacer = new Region();
-		srtspacer.setPrefHeight(150);
-
-		Region logspacer= new Region();
-		logspacer.setPrefHeight(50);
-
-		VBox rightPanel = new VBox(10, resetBtn, saveBtn, loadBtn,logspacer, logArea ,srtspacer, Startbtn);
-		rightPanel.setAlignment(Pos.TOP_CENTER);
-		rightPanel.setPadding(new Insets(0));
-
-
-		GridPane rightPane = new GridPane(); 
-		rightPane.setPrefWidth(150);
-		rightPane.setPrefHeight(150); rightPane.setPadding(new Insets(10));
-		rightPane.add(rightPanel, 0, 0);
-
-		GridPane grid = new GridPane();
-		grid.setPadding(new Insets(10));
-		grid.setHgap(10);
-		grid.setVgap(10);
-		GridPane.setFillWidth(rightPane, false); 
-		GridPane.setFillHeight(rightPane, false);
-		GridPane.setHalignment(rightPane,javafx.geometry.HPos.CENTER);
-		GridPane.setValignment(rightPane, javafx.geometry.VPos.CENTER);
-
-		// grid.add(leftPanel, 0, 0);
-
-		BorderPane root = new BorderPane();
-		root.setLeft(grid);
-		root.setRight(rightPanel); 
-		root.setCenter(canvasWrapper);
-		root.setBottom(Bottompanel);
-		root.setStyle("-fx-background-color: lightblue;");
+		
+		GridPane.setFillWidth(loadBtn, true);
+		GridPane.setFillWidth(saveBtn, true);
+		GridPane.setFillWidth(resetBtn, true);
+		GridPane.setFillWidth(logArea, true);
+		GridPane.setFillWidth(Startbtn, true);
+		GridPane.setFillWidth(Canvas, true);
+		GridPane.setFillHeight(Canvas, true);
+		
+		GridPane.setHalignment(Canvas,javafx.geometry.HPos.CENTER);
+		GridPane.setValignment(Canvas, javafx.geometry.VPos.CENTER);
+		
+		loadBtn.setMaxWidth(Double.MAX_VALUE);
+		saveBtn.setMaxWidth(Double.MAX_VALUE);
+		resetBtn.setMaxWidth(Double.MAX_VALUE);
+		Startbtn.setMaxWidth(Double.MAX_VALUE);
+		Invaderbtn.setMaxWidth(Double.MAX_VALUE);
+		Homeownerbtn.setMaxWidth(Double.MAX_VALUE);
+		Wallbtn.setMaxWidth(Double.MAX_VALUE);
+		Undobtn.setMaxWidth(Double.MAX_VALUE);
 		
 		GridPane rootGrid = new GridPane();
 		rootGrid.add(Canvas, 0, 0, 4, 4);
@@ -194,8 +173,35 @@ public class UserInterface extends Application {
 		rootGrid.add(Invaderbtn, 2, 4);
 		rootGrid.add(Homeownerbtn, 1, 4);
 		rootGrid.add(Wallbtn, 0, 4);
+		
+		// Add column constraints to any column of choice
+		for (int i = 0; i < 5; i++) {
+	        ColumnConstraints colConst = new ColumnConstraints();
+	        if (i == 4) { // want to set horizontal grow policy for column index 4
+	            //colConst.setHgrow(Priority.ALWAYS); // Column 4 grows to take available space
+	            // colConst.setMaxWidth(200);
+	        }
+	        if (i != 4) {
+	        	colConst.setHgrow(Priority.ALWAYS);
+	        }
+	        rootGrid.getColumnConstraints().add(colConst);
+	    }
+		
+		// Add row constraints to any column of choice
+		for (int i = 0; i < 5; i++) {
+	        RowConstraints rowConst = new RowConstraints();
+	        if (i == 3) { // want to set vertical grow policy for column index 3
+	            rowConst.setVgrow(Priority.ALWAYS); // Row 3 grows to take available space
+	        }
+	        rootGrid.getRowConstraints().add(rowConst);
+	    }
+		
+		rootGrid.setGridLinesVisible(false); // for debug purposes set true
 
-		Scene scene = new Scene(rootGrid, 800, 650);
+		Scene scene = new Scene(rootGrid, 1600, 900);
+		primaryStage.setFullScreen(true);
+		primaryStage.setResizable(false);
+		primaryStage.setFullScreenExitHint("Drag on canvas to draw walls\nPress on canvas to insert Invader or Homeowner\n");
 		primaryStage.setTitle("Home Invader Simulator ");
 		primaryStage.setScene(scene);
 		primaryStage.show();
