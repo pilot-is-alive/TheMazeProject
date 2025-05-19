@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import accse.datastructure.Graph;
+import accse.datastructure.GraphDataStructure;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,6 +33,7 @@ import main.DrawChoice;
 import main.GraphConverter;
 import main.MyCanvas;
 import main.PixelCoordinate;
+import main.User;
 
 public class UserInterface extends Application {
 
