@@ -50,7 +50,7 @@ public class GraphConverter {
 		int[] dy = {-1, -1, -1, 0, 0 , 1, 1, 1}; // y-offsets
 		
 		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < dy.length; x++) {
+			for (int x = 0; x < width; x++) {
 				PixelCoordinate currentPixelCoord = new PixelCoordinate(x, y); // storing the coordinate as PixelCoordinate
 				Color currentColor = this.pixelColorMap.get(currentPixelCoord); // getting the color associated with the coordinate from the map
 				if (currentColor == null) continue; // just in case
