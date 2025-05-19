@@ -150,7 +150,7 @@ public class MyCanvas extends Canvas {
 		return new PixelCoordinate(centerX, centerY);
 	}
 	
-	public PixelCoordinate getEscpaerLocation() {
+	public PixelCoordinate getEscaperLocation() {
 		return getCenterPixel(escaper);
 	}
 	
