@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import accse.datastructure.Graph;
+import accse.datastructure.GraphDataStructure;
+
 /*
  * A generic User class that helps the user find a safe point in the maze by implementing Dijikstra's algorithm 
  * to find the shortest & most safe path to exit the maze.
