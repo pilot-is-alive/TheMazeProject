@@ -46,6 +46,7 @@ public class UserInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Canvas = new MyCanvas();
+		Canvas.onObjectMovedProperty().set(()-> recalculatePathsAfterMove());
 		Canvas.setWidth(800);
 		Canvas.setHeight(600);
 		Canvas.minWidth(500);
@@ -123,6 +124,8 @@ public class UserInterface extends Application {
 			findAndDrawEscaperPath();
 			// Find and draw Intruder paths
 			// findAndDrawIntruderPaths();
+			//Enabling drag-and-drop movements
+			logArea.appendText("Graph built.Movement handlers potentially enabled.\n");
 		});
 
 		Button resetBtn = new Button("Reset");
@@ -244,6 +247,7 @@ public class UserInterface extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.setFullScreenExitHint("Drag on canvas to draw walls\nPress on canvas to insert Invader or Homeowner\n");
 		primaryStage.setTitle("Home Invader Simulator ");
+		primaryStage.setUserData(this);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		Canvas.render();
@@ -302,6 +306,22 @@ public class UserInterface extends Application {
 	    	ex.printStackTrace(); // Print stack trace for debugging 
 	    	Canvas.setPathToDraw(null); 
 	    } 
+	}
+
+	
+
+	public void recalculatePathsAfterMove() {
+		// TODO Auto-generated method stub
+		logArea.appendText("Object moved.Recalculating paths...\n");
+		//Only recalculte if the graph exist
+		if(mazeGraph!=null)
+		{
+			findAndDrawEscaperPath();//Recalculate for escaper
+			
+		}else
+		{
+			logArea.appendText("Cannot recalculate paths: Graph not built.\n");
+		}
 	}
 
 

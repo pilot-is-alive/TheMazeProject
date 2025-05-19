@@ -2,6 +2,9 @@ package main;
 
 import java.util.List;
 import java.util.Vector;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import ui.UserInterface;
 
 public class MyCanvas extends Canvas {
 	private Line currentLine;
@@ -23,6 +27,9 @@ public class MyCanvas extends Canvas {
 	private final double lineWeight = 3;
 	private Image backgroundImage;
 	private List<PixelCoordinate> currentPath; // Store path for drawing
+	private Rectangle selectedObject=null;
+	private double draggoffsetX, dragOffsetY;
+	private final ObjectProperty<Runnable> onObjectMoved= new SimpleObjectProperty<>();
 	
 	public MyCanvas() {
 		System.out.println("Create my canvas");
@@ -255,6 +262,97 @@ public class MyCanvas extends Canvas {
 			
 			render();
 		}
+	}
+	
+	private void setupMovementHandlers()
+	{
+		//Removing the drawing handler first
+		super.setOnMousePressed(null);
+		super.setOnMouseReleased(null);
+		super.setOnMouseDragged(null);
+		
+		//adding movement handlers
+		super.setOnMousePressed(e->{
+			selectedObject=null;
+			//Checking if click is on  escaper
+			if(escaper!=null && escaper.contains(e.getX(),e.getSceneY())) {
+				selectedObject=escaper;
+			}
+			//Checking if click is on an intruder
+			else {
+				for(Rectangle intruder: intruders)
+				{
+					if(intruder.contains(e.getX(),e.getY()))
+					{
+						selectedObject=intruder;
+						break;
+					}
+				}
+			}
+			
+			//Checking escape point
+			if(selectedObject!=null)
+			{
+				draggoffsetX=e.getX()-selectedObject.getX();
+				dragOffsetY=e.getY()-selectedObject.getY();
+				System.out.println("Selected: "+ (selectedObject== escaper ? "Escaper": "Intruder/Other"));
+				
+				
+			}
+			else {
+				System.out.println("Clicked empty space");
+			}
+		});
+		
+		 super.setOnMouseDragged(e -> { 
+	            if (selectedObject != null) { 
+	                double newX = e.getX() - draggoffsetX; 
+	                double newY = e.getY() - dragOffsetY; 
+	                selectedObject.setX(newX); 
+	                selectedObject.setY(newY); 
+	                render(); // Render continuously while dragging 
+	            } 
+	     });
+		 
+		 super.setOnMouseReleased(e->{
+			 if(selectedObject!=null && onObjectMoved.get()!=null)
+			 {
+				 System.out.println("Released object");
+				 //Accessing the user interface
+				// ((UserInterface) getScene().getWindow().getUserData()).handleObjectMoved();
+				 //Printing the location
+				 System.out.println("New Escaper Loc: "+ getEscaperLocation());
+				 System.out.println("New Escape Loc: "+ getEscapePointLocation());
+				 
+				 selectedObject=null;//Deselect
+				 onObjectMoved.get().run();
+				 //Trigger Path recalculation
+//				 UserInterface ui= findUserInterfaceInstance();
+//				 
+//				 if(ui !=null)
+//				 {
+//					 (ui).recalculatePathsAfterMove();
+//				 }
+//				 
+			 }
+		 });
+		
+		
+	}
+	
+	public ObjectProperty<Runnable> onObjectMovedProperty() {
+        return onObjectMoved;
+    }
+	
+	private UserInterface findUserInterfaceInstance()
+	{
+		if(getScene()!=null && getScene().getWindow()!=null && getScene().getWindow().getUserData() instanceof UserInterface)
+		{
+			return (UserInterface) getScene().getWindow().getUserData();
+		}
+		// Fallback or error handling needed
+		System.err.println("Could not find UserInterface instance to trigger path recalc");
+		return null;
 	}
 	
 }
