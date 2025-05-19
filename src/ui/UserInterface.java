@@ -2,7 +2,10 @@ package ui;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
+import java.util.Map;
 
+import accse.datastructure.Graph;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,19 +31,30 @@ import javafx.stage.Stage;
 import main.DrawChoice;
 import main.GraphConverter;
 import main.MyCanvas;
+import main.PixelCoordinate;
 
 public class UserInterface extends Application {
 
 	private GraphConverter converter = null;
+	private Graph<PixelCoordinate> mazeGraph = null;
+	private MyCanvas Canvas; // make canvas accessible
+	private User<PixelCoordinate> pathFinder = new User<>();
+	private TextArea logArea = null;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		MyCanvas Canvas = new MyCanvas();
+		Canvas = new MyCanvas();
 		Canvas.setWidth(800);
 		Canvas.setHeight(600);
 		Canvas.minWidth(500);
 		Canvas.minHeight(500);
 		//Canvas.minHeight(550);
+		
+		logArea = new TextArea();
+		logArea.setText("Logs, test scores, and error messages...\n");
+		// logArea.setPrefWidth(10);
+		logArea.setPrefHeight(200);
+		logArea.setEditable(true);
 
 		Button Wallbtn = new Button("Walls");
 		Wallbtn.setPrefWidth(200);
@@ -97,14 +111,24 @@ public class UserInterface extends Application {
 		Startbtn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
 		Startbtn.setStyle("-fx-background-color: Lightgreen; -fx-text-fill: white;");
 		Startbtn.setOnAction(e -> {
+			// Create/Recreate the graph from the current canvas state
+			logArea.appendText("Building graph from canvas...\n");
 			converter =  new GraphConverter();
 			converter.createGraphFromCanvas(Canvas);
-
+			mazeGraph = converter.getGraph(); // store the graph
+			logArea.appendText("Graph built. Vertices: " + (mazeGraph != null ? mazeGraph.getVertices().size() : 0) + "\n");
+			// Find and draw the Escaper's path
+			findAndDrawEscaperPath();
+			// Find and draw Intruder paths
+			// findAndDrawIntruderPaths();
 		});
 
 		Button resetBtn = new Button("Reset");
 		resetBtn.setOnAction(e->{
 			Canvas.reset();
+			mazeGraph = null;
+			converter = null;
+			logArea.setText("Canvas Reset. \nLogs, test scores, and error messages...\n");
 		});
 		Button saveBtn = new Button("Save Map");
 
@@ -126,8 +150,14 @@ public class UserInterface extends Application {
 
 					// Draw image on canvas
 					Canvas.setBackgroundImage(blueprintImage);
+					// reset graph state when loading a new map
+					mazeGraph = null;
+					converter = null;
+					Canvas.setPathToDraw(null);
+					logArea.appendText("Loaded map. Draw elements and click 'Build Graph' again.\n");
 				} catch (Exception ex) {
 					ex.printStackTrace();
+					logArea.appendText("Error loading map: " + ex.getMessage() + "\n");
 				}
 			}
 		});
@@ -143,15 +173,9 @@ public class UserInterface extends Application {
 		undoView.setFitWidth(20);
 		Undobtn.setGraphic(undoView);
 
-		TextArea logArea = new TextArea();
-		logArea.setText("Logs, test scores, and error messages...\n");
-		// logArea.setPrefWidth(10);
-		logArea.setPrefHeight(200);
-		logArea.setEditable(true);
-
 		Undobtn.setOnAction(e -> {
 			Canvas.undo();
-			logArea.appendText("Undo last line.\n");
+			logArea.appendText("Undo last line. Graph may be outdated.\n");
 		});
 
 		
@@ -221,6 +245,61 @@ public class UserInterface extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		Canvas.render();
+	}
+	
+	private void findAndDrawEscaperPath() {
+		if (mazeGraph == null) { 
+            logArea.appendText("Error: Graph not built yet. Click 'Build Graph' first.\n"); 
+            return; 
+        } 
+ 
+        PixelCoordinate startNode = Canvas.getEscaperLocation(); 
+        PixelCoordinate endNode = Canvas.getEscapePointLocation(); 
+ 
+        if (startNode == null) { 
+            logArea.appendText("Error: Escaper position not set.\n"); 
+            Canvas.setPathToDraw(null); // Clear any old path 
+            return; 
+        } 
+        if (endNode == null) { 
+            logArea.appendText("Error: Escape point not set.\n"); 
+            Canvas.setPathToDraw(null); // Clear any old path 
+            return;
+        }
+        
+     // Ensuring start/end nodes exist in the graph (they should if placed within bounds) 
+	    if (!mazeGraph.getVertices().contains(startNode)) { 
+	         logArea.appendText("Error: Escaper location " + startNode + " not found in graph vertices.\n"); 
+	         Canvas.setPathToDraw(null); 
+	         return; 
+	    } 
+	    if (!mazeGraph.getVertices().contains(endNode)) { 
+	         logArea.appendText("Error: Escape point location " + endNode + " not found in graph vertices.\n"); 
+             Canvas.setPathToDraw(null); 
+             return; 
+	    }
+	    logArea.appendText("Finding path from " + startNode + " to " + endNode + "...\n"); 
+
+	    try { 
+	    	// Run Dijkstra 
+	    	Map<PixelCoordinate, PixelCoordinate> cameFrom = GraphDataStructure.dijkstraAlgorithm(mazeGraph, startNode, endNode); 
+
+	    	// Reconstruct the path 
+	    	List<PixelCoordinate> path = pathFinder.routeTracking(cameFrom, startNode, endNode); 
+
+	    	if (path.isEmpty() || !path.get(path.size() - 1).equals(endNode)) { 
+	    		logArea.appendText("Path not found or incomplete.\n"); 
+	    		Canvas.setPathToDraw(null); 
+	    	} else { 
+	    		logArea.appendText("Path found! Length: " + path.size() + " steps.\n"); 
+	    		// Tell the canvas to draw this path 
+	    		Canvas.setPathToDraw(path); 
+	    	} 
+	    } catch (Exception ex) { 
+	    	logArea.appendText("Error during pathfinding: " + ex.getMessage() + "\n"); 
+	    	ex.printStackTrace(); // Print stack trace for debugging 
+	    	Canvas.setPathToDraw(null); 
+	    } 
 	}
 
 
