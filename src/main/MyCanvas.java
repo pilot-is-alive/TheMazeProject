@@ -1,5 +1,6 @@
 package main;
 
+import java.util.List;
 import java.util.Vector;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
@@ -16,10 +17,12 @@ public class MyCanvas extends Canvas {
 	private Vector<Line> lines;
 	private Vector<Rectangle> intruders;
 	private Rectangle escaper;
+	private Rectangle escapePoint;
 	private DrawChoice choice;
 	private final double squareSideLength = 20;
 	private final double lineWeight = 3;
 	private Image backgroundImage;
+	private List<PixelCoordinate> currentPath; // Store path for drawing
 	
 	public MyCanvas() {
 		System.out.println("Create my canvas");
@@ -28,6 +31,8 @@ public class MyCanvas extends Canvas {
 		lines = new Vector<Line>();
 		intruders = new Vector<Rectangle>();
 		escaper = null;
+		escapePoint = null;
+		currentPath = null;
 		super.setOnMousePressed(new MouseDragEnteredHandler());
 		super.setOnMouseReleased(new MouseDragExitHandler());
 		this.setOnMouseDragged(new MouseDraggedHandler());
@@ -49,27 +54,41 @@ public class MyCanvas extends Canvas {
 		lines = new Vector<Line>();
 		intruders = new Vector<Rectangle>();
 		escaper = null;
+		escapePoint = null;
 		backgroundImage = null;
+		currentPath = null; // Reset path
 		clearCanvas();
+		drawChoice(DrawChoice.WALL); // Reset to wall drawing
 	}
 	
 	public void render() {
 		System.out.println("render...");
 		clearCanvas();
+		// Draw background/loaded image
 		if (backgroundImage != null) {
 	        gc.drawImage(backgroundImage, 0, 0, getWidth(), getHeight());
 	    }
+		// Draw walls
 	    gc.setStroke(Color.BLACK);
 	    gc.setLineWidth(lineWeight);
 	    for (Line line : lines) {
 	        gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
 	    }
+	    // Draw path if available (draw before objects so they appear on top)
+	    if (currentPath != null && !currentPath.isEmpty()) {
+	    	gc.setFill(Color.YELLOW);
+	    	for (PixelCoordinate p: currentPath) {
+	    		// Draw small dots for the path
+	    		gc.fillOval(p.getX() - 1, p.getY() - 1, 3, 3);
+	    	}
+	    }
 	    
+	    // Draw intruders
 	    gc.setFill(Color.RED);
 	    for (Rectangle intruder: intruders) {
 			gc.fillRect(intruder.getX(), intruder.getY(), intruder.getWidth(), intruder.getHeight());
 		}
-	    
+	    // Draw escaper if exists
 	    if (escaper != null) {
 	    	gc.setFill(Color.BLUE);
 	    	gc.fillRect(escaper.getX(), escaper.getY(), escaper.getWidth(), escaper.getHeight());
@@ -106,15 +125,81 @@ public class MyCanvas extends Canvas {
 			break;
 		case ESCAPER:
 		case INTRUDER:
+		case ESCAPE_POINT:
 			super.setOnMousePressed(new MousePressedHandler());
-			// reset line to not be drawn
+			// reset line drag handlers
 			super.setOnMouseDragged(null);
 			super.setOnMouseReleased(null);
 			break;
 		}
 		this.choice = choice;
-		
-		
+	}
+	
+	/**
+	 * 
+	 * @param rect Rectangle
+	 * @return center pixel coordinate of the rectangle
+	 */
+	private PixelCoordinate getCenterPixel(Rectangle rect) {
+		if (rect == null)  return null;
+		int centerX = (int) (rect.getX() + squareSideLength / 2);
+		int centerY = (int) (rect.getY() + squareSideLength / 2);
+		// Ensure coordinates are within canvas bounds
+		centerX = Math.max(0, Math.min(centerX, (int) getWidth() - 1));
+		centerY = Math.max(0, Math.min(centerY, (int) getHeight() - 1));
+		return new PixelCoordinate(centerX, centerY);
+	}
+	
+	public PixelCoordinate getEscpaerLocation() {
+		return getCenterPixel(escaper);
+	}
+	
+	public PixelCoordinate getEscaperPointLocation() {
+		return getCenterPixel(escapePoint);
+	}
+	
+	public List<PixelCoordinate> getIntruderLocations() {
+		List<PixelCoordinate> locations = new Vector<>(); // for thread-safety
+		for (Rectangle intruder: intruders) {
+			PixelCoordinate loc = getCenterPixel(intruder);
+			if (loc != null) {
+				locations.add(loc);
+			}
+		}
+		return locations;
+	}
+	
+	// Setter for drawing the path
+	public void setPathToDraw(List<PixelCoordinate> path) {
+		this.currentPath = path;
+		render(); // Redraw the canvas to show the new path
+	}
+	
+	// Move functionality for escaper
+	public void moveEscaper(double newX, double newY) {
+		if (escaper != null) {
+			// Calculate top-left from center point (newX, newY)
+			escaper.setX(newX - squareSideLength / 2);
+			escaper.setY(newY - squareSideLength / 2);
+			render();
+			// Trigger path recalculation
+		}
+	}
+	
+	/**
+	 *  Move functionality for intruder
+	 * @param index Index of the selected intruder from the list of intruders
+	 * @param newX
+	 * @param newY
+	 */
+	public void moveIntruder(int index, double newX, double newY) {
+		if (index >= 0 && index < intruders.size()) {
+			Rectangle intruder = intruders.get(index); 
+            intruder.setX(newX - squareSideLength / 2); 
+            intruder.setY(newY - squareSideLength / 2); 
+            render(); 
+            // Trigger path recalculation
+		}
 	}
 	
 	class MouseDraggedHandler implements EventHandler<MouseEvent> {
@@ -165,7 +250,8 @@ public class MyCanvas extends Canvas {
 			
 			Rectangle rect = new Rectangle(topLeftX, topLeftY, squareSideLength, squareSideLength);
 			if (choice == DrawChoice.INTRUDER) intruders.add(rect);
-			if (choice == DrawChoice.ESCAPER) escaper = rect;
+			else if (choice == DrawChoice.ESCAPER) escaper = rect;
+			else if (choice == DrawChoice.ESCAPE_POINT) escapePoint = rect;
 			
 			render();
 		}
