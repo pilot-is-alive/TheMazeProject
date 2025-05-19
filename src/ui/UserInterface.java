@@ -123,7 +123,7 @@ public class UserInterface extends Application {
 			// Find and draw the Escaper's path
 			findAndDrawEscaperPath();
 			// Find and draw Intruder paths
-			// findAndDrawIntruderPaths();
+			findAndDrawIntruderPaths();
 			//Enabling drag-and-drop movements
 			logArea.appendText("Graph built.Movement handlers potentially enabled.\n");
 		});
@@ -308,15 +308,41 @@ public class UserInterface extends Application {
 	    } 
 	}
 
-	
+	private void findAndDrawIntruderPaths()
+	{
+		if(mazeGraph==null || Canvas.getEscaperLocation()==null) return;
+		PixelCoordinate targetNode=Canvas.getEscaperLocation();
+		List<PixelCoordinate> intruderStarts= Canvas.getIntruderLocations();
+		
+		for(int i=0; i<intruderStarts.size();i++)
+		{
+			PixelCoordinate StartNode=Canvas.getEscaperLocation();
+			try {
+				 Map<PixelCoordinate, PixelCoordinate> cameFrom=GraphDataStructure.dijkstraAlgorithm(mazeGraph, StartNode, targetNode);
+				 List<PixelCoordinate> path=pathFinder.routeTracking(cameFrom, StartNode, targetNode);
+				 
+				 if(path.isEmpty()|| !path.get(path.size()-1).equals(targetNode))
+				 {
+					 logArea.appendText("Path for Intruder "+ i+" not found.\n");
+				 }else
+				 {
+					 logArea.appendText("Path for Intruder "+ i+" found! Length: "+ path.size()+"step.\n");
+				 }
+			}catch(Exception ex)
+			{
+				 logArea.appendText("Error finding path for Intruder " + i + ": " +ex.getMessage() + "\n"); 
+			}
+		}
+	}
 
 	public void recalculatePathsAfterMove() {
 		// TODO Auto-generated method stub
 		logArea.appendText("Object moved.Recalculating paths...\n");
-		//Only recalculte if the graph exist
+		// recalculate if the graph exist
 		if(mazeGraph!=null)
 		{
 			findAndDrawEscaperPath();//Recalculate for escaper
+			findAndDrawIntruderPaths();//Recalculating for Intruder
 			
 		}else
 		{

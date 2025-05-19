@@ -327,13 +327,13 @@ public class MyCanvas extends Canvas {
 				 selectedObject=null;//Deselect
 				 onObjectMoved.get().run();
 				 //Trigger Path recalculation
-//				 UserInterface ui= findUserInterfaceInstance();
-//				 
-//				 if(ui !=null)
-//				 {
-//					 (ui).recalculatePathsAfterMove();
-//				 }
-//				 
+			 UserInterface ui= findUserInterfaceInstance();
+				 
+			 	if(ui !=null)
+				 {
+					 (ui).recalculatePathsAfterMove();
+				 }
+				 
 			 }
 		 });
 		
