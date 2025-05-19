@@ -154,7 +154,7 @@ public class MyCanvas extends Canvas {
 		return getCenterPixel(escaper);
 	}
 	
-	public PixelCoordinate getEscaperPointLocation() {
+	public PixelCoordinate getEscapePointLocation() {
 		return getCenterPixel(escapePoint);
 	}
 	
