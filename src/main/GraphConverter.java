@@ -65,8 +65,11 @@ public class GraphConverter {
 						PixelCoordinate neighborPixelCoord = new PixelCoordinate(neighbourX, neighbourY); // storing neighbour coordinate as PixelCoordinate
 						Color neighbourColor = this.pixelColorMap.get(neighborPixelCoord); // get color associated with coordinate, if it exists
 						if (neighbourColor == null) continue; // just in case; but should not happen
-						double weight = calcEdgeWeight(currentColor, neighbourColor); // calculate weight between current colour and neighbour colour
-						this.HouseGraph.insertEdge(currentPixelCoord, neighborPixelCoord, weight); // insert edge between the vertices with calculated weight
+						if (!this.HouseGraph.hasEdge(currentPixelCoord, neighborPixelCoord)) { // to avoid redundant calculation
+							double weight = calcEdgeWeight(currentColor, neighbourColor); // calculate weight between current colour and neighbour colour
+							this.HouseGraph.insertEdge(currentPixelCoord, neighborPixelCoord, weight); // insert edge between the vertices with calculated weight
+						}
+						
 					}
 				}
 			}
