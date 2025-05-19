@@ -18,6 +18,12 @@ public class PixelCoordinate {
 	public int getY() {
 		return y;
 	}
+	
+	public double distanceTo(PixelCoordinate other) {
+		int dx = this.x - other.x;
+		int dy = this.y - other.y;
+		return Math.sqrt(dx*dx + dy*dy);
+	}
 
 	@Override
 	public int hashCode() {
