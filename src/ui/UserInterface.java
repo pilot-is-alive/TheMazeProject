@@ -77,6 +77,19 @@ public class UserInterface extends Application {
 		Homeownerbtn.setOnAction(e -> {
 			Canvas.drawChoice(DrawChoice.ESCAPER);
 		});
+		
+		Button EscapePointBtn = new Button("Escape Pt.");
+		EscapePointBtn.setPrefWidth(200);
+		EscapePointBtn.setPrefHeight(40);
+		// Image escIcon = new Image(getClass().getResourceAsStream("/ProjectDesign/Resources/EscapePoint.png"))
+		// Make sure you have an icon 
+		// ImageView escView = new ImageView(escIcon); 
+		// escView.setFitHeight(30); 
+		// escView.setFitWidth(30); 
+		// EscapePointBtn.setGraphic(escView); 
+		EscapePointBtn.setOnAction(e -> {
+			Canvas.drawChoice(DrawChoice.ESCAPE_POINT);
+		});
 
 		Button Startbtn = new Button("Start");
 //		Startbtn.setPrefWidth(120);
@@ -160,28 +173,30 @@ public class UserInterface extends Application {
 		Invaderbtn.setMaxWidth(Double.MAX_VALUE);
 		Homeownerbtn.setMaxWidth(Double.MAX_VALUE);
 		Wallbtn.setMaxWidth(Double.MAX_VALUE);
+		EscapePointBtn.setMaxWidth(Double.MAX_VALUE);
 		Undobtn.setMaxWidth(Double.MAX_VALUE);
 		
 		GridPane rootGrid = new GridPane();
-		rootGrid.add(Canvas, 0, 0, 4, 4);
-		rootGrid.add(loadBtn, 4, 0);
-		rootGrid.add(saveBtn, 4, 1);
-		rootGrid.add(resetBtn, 4, 2);
-		rootGrid.add(logArea, 4, 3);
-		rootGrid.add(Startbtn, 4, 4);
-		rootGrid.add(Undobtn, 3, 4);
+		rootGrid.add(Canvas, 0, 0, 5, 4);
+		rootGrid.add(loadBtn, 5, 0);
+		rootGrid.add(saveBtn, 5, 1);
+		rootGrid.add(resetBtn, 5, 2);
+		rootGrid.add(logArea, 5, 3);
+		rootGrid.add(Startbtn, 5, 4);
+		rootGrid.add(Undobtn, 4, 4);
+		rootGrid.add(EscapePointBtn, 3, 4);
 		rootGrid.add(Invaderbtn, 2, 4);
 		rootGrid.add(Homeownerbtn, 1, 4);
 		rootGrid.add(Wallbtn, 0, 4);
 		
 		// Add column constraints to any column of choice
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 	        ColumnConstraints colConst = new ColumnConstraints();
-	        if (i == 4) { // want to set horizontal grow policy for column index 4
-	            //colConst.setHgrow(Priority.ALWAYS); // Column 4 grows to take available space
+	        if (i == 5) { // want to set horizontal grow policy for column index 5
+	            //colConst.setHgrow(Priority.ALWAYS); // Column 5 grows to take available space
 	            // colConst.setMaxWidth(200);
 	        }
-	        if (i != 4) {
+	        if (i != 5) {
 	        	colConst.setHgrow(Priority.ALWAYS);
 	        }
 	        rootGrid.getColumnConstraints().add(colConst);
