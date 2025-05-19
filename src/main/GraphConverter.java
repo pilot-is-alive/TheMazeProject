@@ -81,19 +81,44 @@ public class GraphConverter {
 		
 	}
 	
-	/**
-	 * Calculates weight based on similarity.
-	 * Higher weight is means highly similar
-	 * Lower weight is means highly dissimilar
-	 * Calculate distance between colors as Euclidean distance
-	 */
+	/** 
+	* Calculates the cost (weight) of moving between two pixels based on color. 
+	* Lower weight means easier/cheaper to traverse (more similar colors, not walls). 
+	* Higher weight means harder/more expensive (dissimilar colors, walls). 
+	* 
+	* @param A Color of the first pixel. 
+	* @param B Color of the second pixel. 
+	* @return The calculated edge weight (cost). 
+	*/
 	private double calcEdgeWeight(Color A, Color B) {
-		double MAX_DIFF = 3;
-		double redDiff = Math.abs(A.getRed() - B.getRed());
-		double greenDiff = Math.abs(A.getGreen() - B.getGreen());
-		double blueDiff = Math.abs(A.getBlue() - B.getBlue());
+		double redDiff = Math.abs(A.getRed() - B.getRed()); 
+        double greenDiff = Math.abs(A.getGreen() - B.getGreen()); 
+        double blueDiff = Math.abs(A.getBlue() - B.getBlue()); 
+        double colorDistance = redDiff + greenDiff + blueDiff; // Range 0.0 to 3.0
+        
+        // Basic cost: add 1.0 to ensure no zero-cost edges and provide base traversal cost
+        double baseCost = 1.0 + colorDistance * 10;  // Scale difference to make it more significant than base cost
 		
-		return MAX_DIFF - (redDiff + greenDiff + blueDiff);
+        // Penalize walls heavily
+		double wallPenalty = 10000.0; // Very high cost for entering a wall pixel 
+        boolean aIsWall = isWallColor(A); 
+        boolean bIsWall = isWallColor(B); 
+ 
+        // If moving *into* a wall pixel, make it extremely expensive 
+	    if (bIsWall) { 
+	         return wallPenalty; 
+	    } 
+	    
+	    return baseCost;
+	}
+	
+	/**
+	 * Helper method to determine if a color represents a wall (e.g. black or very dark)
+	 */
+	private boolean isWallColor(Color c) {
+		// Consider black or near-black as walls 
+        double threshold = 0.1; // Adjustable 
+        return c.getRed() < threshold && c.getGreen() < threshold && c.getBlue() < threshold; 
 	}
 	
 }
