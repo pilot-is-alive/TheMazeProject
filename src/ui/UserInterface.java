@@ -39,6 +39,7 @@ public class UserInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Canvas = new MyCanvas();
+		Canvas.onObjectMovedProperty().set(()-> recalculatePathsAfterMove());
 		Canvas.setWidth(800);
 		Canvas.setHeight(600);
 		Canvas.minWidth(500);
@@ -129,7 +130,9 @@ public class UserInterface extends Application {
 			// Find and draw the Escaper's path
 			findAndDrawEscaperPath();
 			// Find and draw Intruder paths
-			// findAndDrawIntruderPaths();
+			findAndDrawIntruderPaths();
+			//Enabling drag-and-drop movements
+			logArea.appendText("Graph built.Movement handlers potentially enabled.\n");
 		});
 
 		Button resetBtn = new Button("Reset");
@@ -254,6 +257,7 @@ public class UserInterface extends Application {
 		primaryStage.setResizable(true);
 		primaryStage.setFullScreenExitHint("Drag on canvas to draw walls\nPress on canvas to insert Invader or Homeowner\n");
 		primaryStage.setTitle("Home Invader Simulator ");
+		primaryStage.setUserData(this);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		Canvas.render();
@@ -312,6 +316,48 @@ public class UserInterface extends Application {
 	    	ex.printStackTrace(); // Print stack trace for debugging 
 	    	Canvas.setPathToDraw(null); 
 	    } 
+	}
+
+	private void findAndDrawIntruderPaths()
+	{
+		if(mazeGraph==null || Canvas.getEscaperLocation()==null) return;
+		PixelCoordinate targetNode=Canvas.getEscaperLocation();
+		List<PixelCoordinate> intruderStarts= Canvas.getIntruderLocations();
+		
+		for(int i=0; i<intruderStarts.size();i++)
+		{
+			PixelCoordinate StartNode=Canvas.getEscaperLocation();
+			try {
+				 Map<PixelCoordinate, PixelCoordinate> cameFrom=GraphDataStructure.dijkstraAlgorithm(mazeGraph, StartNode, targetNode);
+				 List<PixelCoordinate> path=pathFinder.routeTracking(cameFrom, StartNode, targetNode);
+				 
+				 if(path.isEmpty()|| !path.get(path.size()-1).equals(targetNode))
+				 {
+					 logArea.appendText("Path for Intruder "+ i+" not found.\n");
+				 }else
+				 {
+					 logArea.appendText("Path for Intruder "+ i+" found! Length: "+ path.size()+"step.\n");
+				 }
+			}catch(Exception ex)
+			{
+				 logArea.appendText("Error finding path for Intruder " + i + ": " +ex.getMessage() + "\n"); 
+			}
+		}
+	}
+
+	public void recalculatePathsAfterMove() {
+		// TODO Auto-generated method stub
+		logArea.appendText("Object moved.Recalculating paths...\n");
+		// recalculate if the graph exist
+		if(mazeGraph!=null)
+		{
+			findAndDrawEscaperPath();//Recalculate for escaper
+			findAndDrawIntruderPaths();//Recalculating for Intruder
+			
+		}else
+		{
+			logArea.appendText("Cannot recalculate paths: Graph not built.\n");
+		}
 	}
 
 
