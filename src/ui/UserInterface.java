@@ -8,22 +8,15 @@ import java.util.Map;
 import accse.datastructure.Graph;
 import accse.datastructure.GraphDataStructure;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -57,6 +50,20 @@ public class UserInterface extends Application {
 		// logArea.setPrefWidth(10);
 		logArea.setPrefHeight(200);
 		logArea.setEditable(true);
+		
+		Button ExitBtn = new Button("Exit");
+		Image exIcon = new Image(getClass().getResourceAsStream("/ProjectDesign/Resources/esc door.png"));
+		ImageView exView = new ImageView(exIcon);
+		exView.setFitHeight(16);
+		exView.setFitWidth(16);
+		ExitBtn.setGraphic(exView);
+		ExitBtn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 15));
+		ExitBtn.setStyle("-fx-background-color: grey; -fx-text-fill: white;");
+		ExitBtn.setOnAction(e ->{
+			
+			primaryStage.close();
+		});
+		
 
 		Button Wallbtn = new Button("Walls");
 		Wallbtn.setPrefWidth(200);
@@ -188,6 +195,7 @@ public class UserInterface extends Application {
 		GridPane.setFillWidth(Startbtn, true);
 		GridPane.setFillWidth(Canvas, true);
 		GridPane.setFillHeight(Canvas, true);
+		GridPane.setFillWidth(ExitBtn, true);
 		
 		GridPane.setHalignment(Canvas,javafx.geometry.HPos.CENTER);
 		GridPane.setValignment(Canvas, javafx.geometry.VPos.CENTER);
@@ -201,19 +209,21 @@ public class UserInterface extends Application {
 		Wallbtn.setMaxWidth(Double.MAX_VALUE);
 		EscapePointBtn.setMaxWidth(Double.MAX_VALUE);
 		Undobtn.setMaxWidth(Double.MAX_VALUE);
+		ExitBtn.setMaxWidth(Double.MAX_VALUE);
 		
 		GridPane rootGrid = new GridPane();
-		rootGrid.add(Canvas, 0, 0, 5, 4);
+		rootGrid.add(Canvas, 0, 0, 5, 5);
 		rootGrid.add(loadBtn, 5, 0);
 		rootGrid.add(saveBtn, 5, 1);
 		rootGrid.add(resetBtn, 5, 2);
-		rootGrid.add(logArea, 5, 3);
-		rootGrid.add(Startbtn, 5, 4);
-		rootGrid.add(Undobtn, 4, 4);
-		rootGrid.add(EscapePointBtn, 3, 4);
-		rootGrid.add(Invaderbtn, 2, 4);
-		rootGrid.add(Homeownerbtn, 1, 4);
-		rootGrid.add(Wallbtn, 0, 4);
+		rootGrid.add(ExitBtn, 5, 3);
+		rootGrid.add(logArea, 5, 4);
+		rootGrid.add(Startbtn, 5, 5);
+		rootGrid.add(Undobtn, 4, 5);
+		rootGrid.add(EscapePointBtn, 3, 5);
+		rootGrid.add(Invaderbtn, 2, 5);
+		rootGrid.add(Homeownerbtn, 1, 5);
+		rootGrid.add(Wallbtn, 0, 5);
 		
 		// Add column constraints to any column of choice
 		for (int i = 0; i < 6; i++) {
@@ -229,9 +239,9 @@ public class UserInterface extends Application {
 	    }
 		
 		// Add row constraints to any column of choice
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 	        RowConstraints rowConst = new RowConstraints();
-	        if (i == 3) { // want to set vertical grow policy for column index 3
+	        if (i == 4) { // want to set vertical grow policy for column index 3
 	            rowConst.setVgrow(Priority.ALWAYS); // Row 3 grows to take available space
 	        }
 	        rootGrid.getRowConstraints().add(rowConst);
@@ -241,7 +251,7 @@ public class UserInterface extends Application {
 
 		Scene scene = new Scene(rootGrid, 1600, 900);
 		primaryStage.setFullScreen(true);
-		primaryStage.setResizable(false);
+		primaryStage.setResizable(true);
 		primaryStage.setFullScreenExitHint("Drag on canvas to draw walls\nPress on canvas to insert Invader or Homeowner\n");
 		primaryStage.setTitle("Home Invader Simulator ");
 		primaryStage.setScene(scene);
