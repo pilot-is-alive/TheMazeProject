@@ -174,6 +174,20 @@ public class UserInterface extends Application {
 				}
 				}
 				logArea.appendText(String.format("Summary: Rooms: %d\n",roomCount));
+				if(roomCount==1) {
+					logArea.appendText("This is a Bachelor House\n");
+				}
+				if(1<roomCount && roomCount<=3)
+				{
+					logArea.appendText("This is a standard House\n");
+				}
+				else if (3<roomCount && roomCount<=5)
+				{
+					logArea.appendText("This is a Large House\n");
+				}else if(roomCount>5)
+				{
+					logArea.appendText("This is a Mansion\n");
+				}
 				Canvas.setRegionsForDrawing(currentRegions); // Need to add this method to MyCanvas
 				Canvas.render(); // Or a specific render method
 
