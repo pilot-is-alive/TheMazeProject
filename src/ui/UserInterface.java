@@ -324,7 +324,7 @@ public class UserInterface extends Application {
 	        rootGrid.getRowConstraints().add(rowConst);
 	    }
 		
-		rootGrid.setGridLinesVisible(true); // for debug purposes set true
+		rootGrid.setGridLinesVisible(false); // for debug purposes set true
 
 		Scene scene = new Scene(rootGrid, 1600, 900);
 		primaryStage.setFullScreen(true);
