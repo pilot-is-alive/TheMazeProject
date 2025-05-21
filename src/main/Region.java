@@ -38,7 +38,11 @@ public class Region
      */
     private void calculateBaseFeatures() {
         this.area = pixels.size();
-        if (pixels.isEmpty()) return;
+        
+        if (pixels.isEmpty()) 
+        {
+        	return;
+        }
 
         double sumX = 0, sumY = 0;
         int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE;
@@ -63,14 +67,37 @@ public class Region
         this.aspectRatio = (boundingBoxHeight > 0) ? boundingBoxWidth / boundingBoxHeight : 1.0;
     }
 
-    public int getId() { return id; }
-    public List<PixelCoordinate> getPixels() { return pixels; }
-    public RegionTypes getType() { return type; }
-    public double getArea() { return area; }
-    public PixelCoordinate getCentroid() { return centroid; }
-    public double getBoundingBoxWidth() { return boundingBoxWidth; }
-    public double getBoundingBoxHeight() { return boundingBoxHeight; }
-    public double getAspectRatio() { return aspectRatio; }
+    public int getId() { 
+    	return id; 
+    }
+    
+    public List<PixelCoordinate> getPixels() {
+    	return pixels; 
+    }
+    
+    public RegionTypes getType() { 
+    	return type; 
+    }
+    
+    public double getArea() {
+    	return area; 
+    }
+    
+    public PixelCoordinate getCentroid() { 
+    	return centroid; 
+    }
+    
+    public double getBoundingBoxWidth() { 
+    	return boundingBoxWidth; 
+    }
+    
+    public double getBoundingBoxHeight() { 
+    	return boundingBoxHeight; 
+    }
+    
+    public double getAspectRatio() {
+    	return aspectRatio; 
+    }
 
     /*
      * Assigns a classification type to this region.
@@ -90,9 +117,14 @@ public class Region
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o) 
+    {
+        if (this == o) {
+        	return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+        	return false;
+        }
         Region region = (Region) o;
         return id == region.id;
     }

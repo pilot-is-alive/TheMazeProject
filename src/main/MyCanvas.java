@@ -19,6 +19,7 @@ public class MyCanvas extends Canvas {
 	private Line currentLine;
 	private GraphicsContext gc;
 	private Vector<Line> lines;
+	private Vector<Line> doors;
 	private Vector<Rectangle> intruders;
 	private Rectangle escaper;
 	private Rectangle escapePoint;
@@ -37,6 +38,7 @@ public class MyCanvas extends Canvas {
 		gc = super.getGraphicsContext2D();
 		currentLine = new Line();
 		lines = new Vector<Line>();
+		doors = new Vector<Line>();
 		intruders = new Vector<Rectangle>();
 		escaper = null;
 		escapePoint = null;
@@ -60,6 +62,7 @@ public class MyCanvas extends Canvas {
 	
 	public void reset() {
 		lines = new Vector<Line>();
+		doors = new Vector<Line>();
 		intruders = new Vector<Rectangle>();
 		escaper = null;
 		escapePoint = null;
@@ -76,12 +79,22 @@ public class MyCanvas extends Canvas {
 		if (backgroundImage != null) {
 	        gc.drawImage(backgroundImage, 0, 0, getWidth(), getHeight());
 	    }
+		
+		//Draw doors
+		gc.setStroke(Color.CRIMSON);
+		gc.setLineWidth(lineWeight);
+		for(Line doorLine: doors)
+		{
+			gc.strokeLine(doorLine.getStartX(), doorLine.getStartY(), doorLine.getEndX(), doorLine.getEndY());
+		}
+		
 		// Draw walls
 	    gc.setStroke(Color.BLACK);
 	    gc.setLineWidth(lineWeight);
 	    for (Line line : lines) {
 	        gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
 	    }
+	    
 	    // Draw path if available (draw before objects so they appear on top)
 	    if (currentPath != null && !currentPath.isEmpty()) {
 	    	gc.setFill(Color.YELLOW);
@@ -96,25 +109,25 @@ public class MyCanvas extends Canvas {
 	    for (Rectangle intruder: intruders) {
 			gc.fillRect(intruder.getX(), intruder.getY(), intruder.getWidth(), intruder.getHeight());
 		}
+	    
 	    // Draw escaper if exists
 	    if (escaper != null) {
 	    	gc.setFill(Color.BLUE);
 	    	gc.fillRect(escaper.getX(), escaper.getY(), escaper.getWidth(), escaper.getHeight());
 	    }
 	    
-	    
-	    if(regionsToDraw!=null)
+	    if(regionsToDraw != null)
 	    {
 	    	for(Region region : regionsToDraw)
 	    	{
 	    		Color regionFillColor = getDisplayColorForRegion(region.getType());
-	    		if(regionFillColor !=null)
+	    		if(regionFillColor != null)
 	    		{
 	    			gc.setFill(regionFillColor);
-	    			if(region.getType()== RegionTypes.ROOM ) {
-	    				for(PixelCoordinate px: region.getPixels())
+	    			if(region.getType() == RegionTypes.ROOM && region.getType() == RegionTypes.DOORS) {
+	    				for(PixelCoordinate pc: region.getPixels())
 	    				{
-	    					gc.fillRect(px.getX(), px.getY(), 1, 1);
+	    					gc.fillRect(pc.getX(), pc.getY(), 1, 1);
 	    				}
 	    			}
 	    		}
@@ -132,13 +145,10 @@ public class MyCanvas extends Canvas {
 	
 	private Color getDisplayColorForRegion(RegionTypes type)
 	{
-		if(type== null) return null;
+		if(type == null) return null;
 		switch(type)
 		{
 			case ROOM: return Color.rgb(0, 0, 255,0.2);
-			//case CORRIDOR: return Color.rgb(0, 255, 0,0.2);
-			//case JUNCTION:  return Color.rgb(255,255,0,0.2);
-			//case DEAD_END_PASSAGE: return Color.rgb(255, 0, 0,0.3);
 			case WALL_STRUCTURE: return Color.rgb(100,100,100,0.1);
 			case OPEN_SPACE: return Color.rgb(200,200,200, 0.1);
 			
