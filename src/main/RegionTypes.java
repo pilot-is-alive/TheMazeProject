@@ -13,5 +13,6 @@ public enum RegionTypes
 	ESCAPE_POINT, // The region representing the escape point.
 	UNDEFINED, // Default state before classification.
 	WALL_STRUCTURE, // Wall segments
-	OPEN_SPACE; // General traversable area. 
+	OPEN_SPACE;// General traversable area.
+	
 }

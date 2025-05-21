@@ -30,6 +30,7 @@ public class MyCanvas extends Canvas {
 	private Rectangle selectedObject=null;
 	private double draggoffsetX, dragOffsetY;
 	private final ObjectProperty<Runnable> onObjectMoved= new SimpleObjectProperty<>();
+	private List<Region> regionsToDraw=null;
 	
 	public MyCanvas() {
 		System.out.println("Create my canvas");
@@ -101,8 +102,51 @@ public class MyCanvas extends Canvas {
 	    	gc.fillRect(escaper.getX(), escaper.getY(), escaper.getWidth(), escaper.getHeight());
 	    }
 	    
+	    
+	    if(regionsToDraw!=null)
+	    {
+	    	for(Region region : regionsToDraw)
+	    	{
+	    		Color regionFillColor = getDisplayColorForRegion(region.getType());
+	    		if(regionFillColor !=null)
+	    		{
+	    			gc.setFill(regionFillColor);
+	    			if(region.getType()== RegionTypes.ROOM ) {
+	    				for(PixelCoordinate px: region.getPixels())
+	    				{
+	    					gc.fillRect(px.getX(), px.getY(), 1, 1);
+	    				}
+	    			}
+	    		}
+	    	}
+	    	
+	    	gc.setStroke(Color.BLACK);
+	    	gc.setLineWidth(lineWeight);
+	    	for(Line line: lines)
+	    	{
+	    		gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+	    	}
+	    }
 	}
 	
+	
+	private Color getDisplayColorForRegion(RegionTypes type)
+	{
+		if(type== null) return null;
+		switch(type)
+		{
+			case ROOM: return Color.rgb(0, 0, 255,0.2);
+			//case CORRIDOR: return Color.rgb(0, 255, 0,0.2);
+			//case JUNCTION:  return Color.rgb(255,255,0,0.2);
+			//case DEAD_END_PASSAGE: return Color.rgb(255, 0, 0,0.3);
+			case WALL_STRUCTURE: return Color.rgb(100,100,100,0.1);
+			case OPEN_SPACE: return Color.rgb(200,200,200, 0.1);
+			
+			default: return null;
+		
+		}
+		
+	}
 	public void renderDraggedLine() {
 		render();
 		gc.setStroke(Color.BLACK);
@@ -340,6 +384,14 @@ public class MyCanvas extends Canvas {
 		
 	}
 	
+	/**
+	 * Set a list of type Regions
+	 * @param regions
+	 **/
+	public void setRegionsForDrawing(List<Region> regions)
+	{
+		this.regionsToDraw=regions;
+	}
 	public ObjectProperty<Runnable> onObjectMovedProperty() {
         return onObjectMoved;
     }
