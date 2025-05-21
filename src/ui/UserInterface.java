@@ -190,6 +190,19 @@ public class UserInterface extends Application {
 			logArea.appendText("Undo last line. Graph may be outdated.\n");
 		});
 
+		Button Doorbtn= new Button("Door");
+		Doorbtn.setPrefWidth(200);
+		Doorbtn.setPrefHeight(40);
+		Doorbtn.setStyle("-fx-text-fill: BLACK;");
+		Image DoorIcon= new Image(getClass().getResourceAsStream("/ProjectDesign/Resources/door.png"));
+		ImageView DoorView = new ImageView(DoorIcon);
+		DoorView.setFitHeight(20);
+		DoorView.setFitWidth(20);
+		Doorbtn.setGraphic(DoorView);
+		
+		Doorbtn.setOnAction(e->{
+			Canvas.drawChoice(DrawChoice.DOOR);
+		});
 		
 		GridPane.setFillWidth(loadBtn, true);
 		GridPane.setFillWidth(saveBtn, true);
@@ -210,32 +223,36 @@ public class UserInterface extends Application {
 		Invaderbtn.setMaxWidth(Double.MAX_VALUE);
 		Homeownerbtn.setMaxWidth(Double.MAX_VALUE);
 		Wallbtn.setMaxWidth(Double.MAX_VALUE);
+		Doorbtn.setMaxWidth(Double.MAX_VALUE);
 		EscapePointBtn.setMaxWidth(Double.MAX_VALUE);
 		Undobtn.setMaxWidth(Double.MAX_VALUE);
 		ExitBtn.setMaxWidth(Double.MAX_VALUE);
 		
 		GridPane rootGrid = new GridPane();
-		rootGrid.add(Canvas, 0, 0, 5, 5);
-		rootGrid.add(loadBtn, 5, 0);
-		rootGrid.add(saveBtn, 5, 1);
-		rootGrid.add(resetBtn, 5, 2);
-		rootGrid.add(ExitBtn, 5, 3);
-		rootGrid.add(logArea, 5, 4);
-		rootGrid.add(Startbtn, 5, 5);
-		rootGrid.add(Undobtn, 4, 5);
-		rootGrid.add(EscapePointBtn, 3, 5);
-		rootGrid.add(Invaderbtn, 2, 5);
-		rootGrid.add(Homeownerbtn, 1, 5);
-		rootGrid.add(Wallbtn, 0, 5);
+		rootGrid.add(Canvas, 0, 0, 6, 6);
+		rootGrid.add(loadBtn, 6, 0);
+		rootGrid.add(saveBtn, 6, 1);
+		rootGrid.add(resetBtn, 6, 2);
+		rootGrid.add(ExitBtn, 6, 3);
+		rootGrid.add(logArea, 6, 4);
+		/////////////////////////////////
+		rootGrid.add(Startbtn, 6, 6);
+		rootGrid.add(Undobtn, 5, 6);
+		rootGrid.add(EscapePointBtn, 4, 6);
+		rootGrid.add(Invaderbtn, 3, 6);
+		rootGrid.add(Homeownerbtn, 2, 6);
+		rootGrid.add(Doorbtn, 1, 6);
+		rootGrid.add(Wallbtn, 0, 6);
+		
 		
 		// Add column constraints to any column of choice
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 7; i++) {
 	        ColumnConstraints colConst = new ColumnConstraints();
-	        if (i == 5) { // want to set horizontal grow policy for column index 5
+	        if (i == 6) { // want to set horizontal grow policy for column index 5
 	            //colConst.setHgrow(Priority.ALWAYS); // Column 5 grows to take available space
 	            // colConst.setMaxWidth(200);
 	        }
-	        if (i != 5) {
+	        if (i != 6) {
 	        	colConst.setHgrow(Priority.ALWAYS);
 	        }
 	        rootGrid.getColumnConstraints().add(colConst);
@@ -250,7 +267,7 @@ public class UserInterface extends Application {
 	        rootGrid.getRowConstraints().add(rowConst);
 	    }
 		
-		rootGrid.setGridLinesVisible(false); // for debug purposes set true
+		rootGrid.setGridLinesVisible(true); // for debug purposes set true
 
 		Scene scene = new Scene(rootGrid, 1600, 900);
 		primaryStage.setFullScreen(true);
