@@ -35,15 +35,15 @@ public class RegionRules
                 continue;
             }
 
-            // Count how many open-space neighbors this region has in the RAG
-            int openNeighborCount = 0;
+            // Count how many open-space neighbours this region has in the RAG
+            int openNeighbourCount = 0;
             if (regionGraph.adjList.containsKey(currentRegion)) 
             {
-                for (Region neighbor : regionGraph.getNodeNeighbours(currentRegion)) 
+                for (Region neighbour : regionGraph.getNodeNeighbours(currentRegion)) 
                 {
-                    if (neighbor.getType() != RegionTypes.WALL_STRUCTURE) 
+                    if (neighbour.getType() != RegionTypes.WALL_STRUCTURE) 
                     {
-                        openNeighborCount++;
+                        openNeighbourCount++;
                     }
                 }
             }
@@ -53,7 +53,7 @@ public class RegionRules
             {
             	currentRegion.setType(RegionTypes.ROOM);
             } 
-            else if (openNeighborCount == 1 && currentRegion.getArea() < DEAD_END_MAX_AREA) 
+            else if (openNeighbourCount == 1 && currentRegion.getArea() < DEAD_END_MAX_AREA) 
             {
                 // Potential dead-end passage, verify if it leads to escape point
                 boolean leadsToEscape = false;

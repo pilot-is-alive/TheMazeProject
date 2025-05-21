@@ -28,6 +28,7 @@ public class MyCanvas extends Canvas {
 	private final double lineWeight = 3;
 	private Image backgroundImage;
 	private List<PixelCoordinate> currentPath; // Store path for drawing
+	private List<PixelCoordinate> intruderPath;
 	private Rectangle selectedObject=null;
 	private double draggoffsetX, dragOffsetY;
 	private final ObjectProperty<Runnable> onObjectMoved= new SimpleObjectProperty<>();
@@ -43,6 +44,7 @@ public class MyCanvas extends Canvas {
 		escaper = null;
 		escapePoint = null;
 		currentPath = null;
+		intruderPath = null;
 		super.setOnMousePressed(new MouseDragEnteredHandler());
 		super.setOnMouseReleased(new MouseDragExitHandler());
 		this.setOnMouseDragged(new MouseDraggedHandler());
@@ -68,6 +70,7 @@ public class MyCanvas extends Canvas {
 		escapePoint = null;
 		backgroundImage = null;
 		currentPath = null; // Reset path
+		intruderPath = null;
 		clearCanvas();
 		drawChoice(DrawChoice.WALL); // Reset to wall drawing
 	}
@@ -100,6 +103,15 @@ public class MyCanvas extends Canvas {
 	    	gc.setFill(Color.YELLOW);
 	    	for (PixelCoordinate p: currentPath) {
 	    		// Draw small dots for the path
+	    		gc.fillOval(p.getX() - 1, p.getY() - 1, 3, 3);
+	    	}
+	    }
+	    
+	    if(intruderPath != null && !intruderPath.isEmpty())
+	    {
+	    	gc.setFill(Color.INDIGO);
+	    	for(PixelCoordinate p : intruderPath)
+	    	{
 	    		gc.fillOval(p.getX() - 1, p.getY() - 1, 3, 3);
 	    	}
 	    }
@@ -236,6 +248,12 @@ public class MyCanvas extends Canvas {
 	public void setPathToDraw(List<PixelCoordinate> path) {
 		this.currentPath = path;
 		render(); // Redraw the canvas to show the new path
+	}
+	
+	public void setPathForIntruder(List<PixelCoordinate> intruderPath)
+	{
+		this.intruderPath = intruderPath;
+		render();
 	}
 	
 	// Move functionality for escaper
