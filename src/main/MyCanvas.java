@@ -159,7 +159,8 @@ public class MyCanvas extends Canvas {
 	}
 	public void renderDraggedLine() {
 		render();
-		gc.setStroke(Color.BLACK);
+		if (choice == DrawChoice.DOOR) gc.setStroke(Color.CRIMSON);
+		else if (choice == DrawChoice.WALL) gc.setStroke(Color.BLACK);
 		gc.strokeLine(currentLine.getStartX(), currentLine.getStartY(), currentLine.getEndX(), currentLine.getEndY());
 	}
 	
@@ -179,7 +180,8 @@ public class MyCanvas extends Canvas {
 	public void drawChoice(DrawChoice choice) {
 		if (this.choice == choice) return;
 		switch (choice) {
-		case WALL: 
+		case WALL:
+		case DOOR:
 			super.setOnMousePressed(new MouseDragEnteredHandler());
 			super.setOnMouseReleased(new MouseDragExitHandler());
 			this.setOnMouseDragged(new MouseDraggedHandler());
@@ -291,7 +293,8 @@ public class MyCanvas extends Canvas {
 			System.out.println("Exiting drag");
 			currentLine.setEndX(event.getX());
 			currentLine.setEndY(event.getY());
-			lines.add(currentLine);
+			if (choice == DrawChoice.DOOR) doors.add(currentLine);
+			else if (choice == DrawChoice.WALL) lines.add(currentLine);
 			render();
 		}
 	}

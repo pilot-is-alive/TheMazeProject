@@ -4,5 +4,6 @@ public enum DrawChoice {
 	WALL,
 	INTRUDER,
 	ESCAPER,
-	ESCAPE_POINT
+	ESCAPE_POINT,
+	DOOR;
 }
