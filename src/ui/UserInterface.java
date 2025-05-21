@@ -18,6 +18,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -49,6 +50,7 @@ public class UserInterface extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		
 		Canvas = new MyCanvas();
 		Canvas.onObjectMovedProperty().set(()-> recalculatePathsAfterMove());
 		Canvas.setWidth(800);
@@ -146,7 +148,7 @@ public class UserInterface extends Application {
 				logArea.appendText("Segmenting image...\n");
 				// Define wall threshold, could be a constant or configurable
 				// This should ideally match the one in GraphConverter.isWallColor or be derived from it
-				double wallPixelThreshold = 0.1;
+				double wallPixelThreshold = 0.6;
 				currentRegions = imageSegmenter.segmentImage(snapshot, wallPixelThreshold);
 				logArea.appendText("Segmentation found " + currentRegions.size() + " regions.\n");
 				logArea.appendText("Building Region Adjacency Graph (RAG)...\n");
@@ -335,6 +337,11 @@ public class UserInterface extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		Canvas.render();
+		
+		Color gray = Color.GREY;
+		System.out.println(gray.getBlue());
+		System.out.println(gray.getRed());
+		System.out.println(gray.getGreen());
 	}
 	
 	private void findAndDrawEscaperPath() {

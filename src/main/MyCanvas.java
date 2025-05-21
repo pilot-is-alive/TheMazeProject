@@ -81,7 +81,7 @@ public class MyCanvas extends Canvas {
 	    }
 		
 		//Draw doors
-		gc.setStroke(Color.CRIMSON);
+		gc.setStroke(Color.GREY);
 		gc.setLineWidth(lineWeight);
 		for(Line doorLine: doors)
 		{
@@ -159,7 +159,7 @@ public class MyCanvas extends Canvas {
 	}
 	public void renderDraggedLine() {
 		render();
-		if (choice == DrawChoice.DOOR) gc.setStroke(Color.CRIMSON);
+		if (choice == DrawChoice.DOOR) gc.setStroke(Color.GREY);
 		else if (choice == DrawChoice.WALL) gc.setStroke(Color.BLACK);
 		gc.strokeLine(currentLine.getStartX(), currentLine.getStartY(), currentLine.getEndX(), currentLine.getEndY());
 	}

@@ -69,7 +69,6 @@ public class GraphConverter {
 							double weight = calcEdgeWeight(currentColor, neighbourColor); // calculate weight between current colour and neighbour colour
 							this.HouseGraph.insertEdge(currentPixelCoord, neighborPixelCoord, weight); // insert edge between the vertices with calculated weight
 						}
-						
 					}
 				}
 			}
