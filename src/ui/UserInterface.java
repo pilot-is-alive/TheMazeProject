@@ -1,4 +1,4 @@
-package ui;
+ package ui;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.image.Image;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -24,8 +25,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.DrawChoice;
 import main.GraphConverter;
+import main.ImageSegmenter;
 import main.MyCanvas;
 import main.PixelCoordinate;
+import main.Region;
+import main.RegionAdjacencyGraphBuilder;
+import main.RegionRules;
+import main.RegionTypes;
 import main.User;
 
 public class UserInterface extends Application {
@@ -35,6 +41,11 @@ public class UserInterface extends Application {
 	private MyCanvas Canvas; // make canvas accessible
 	private User<PixelCoordinate> pathFinder = new User<>();
 	private TextArea logArea = null;
+	private ImageSegmenter imageSegmenter = new ImageSegmenter();
+	private RegionAdjacencyGraphBuilder ragBuilder = new RegionAdjacencyGraphBuilder();
+	private RegionRules regionClassifier = new RegionRules();
+	private List<Region> currentRegions = null;
+	private Graph<Region> currentRAG = null;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -120,7 +131,53 @@ public class UserInterface extends Application {
 		Startbtn.setPrefHeight(40);
 		Startbtn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
 		Startbtn.setStyle("-fx-background-color: Lightgreen; -fx-text-fill: white;");
+		
 		Startbtn.setOnAction(e -> {
+			
+			if (Canvas.getWidth() <= 0 || Canvas.getHeight() <= 0) {
+				logArea.appendText("Canvas not ready or no content to analyze.\n");
+				return;
+				}
+				WritableImage snapshot = Canvas.snapshot(null, null);
+				if (snapshot == null) {
+				logArea.appendText("Failed to get canvas snapshot.\n");
+				return;
+				}
+				logArea.appendText("Segmenting image...\n");
+				// Define wall threshold, could be a constant or configurable
+				// This should ideally match the one in GraphConverter.isWallColor or be derived from it
+				double wallPixelThreshold = 0.1;
+				currentRegions = imageSegmenter.segmentImage(snapshot, wallPixelThreshold);
+				logArea.appendText("Segmentation found " + currentRegions.size() + " regions.\n");
+				logArea.appendText("Building Region Adjacency Graph (RAG)...\n");
+				currentRAG = ragBuilder.buildRegionGraph(currentRegions, (int) snapshot.getWidth(), (int) snapshot.getHeight());
+				logArea.appendText("RAG built with " + currentRAG.getVertices().size() + " region nodes.\n");
+				logArea.appendText("Classifying regions...\n");
+				regionClassifier.classifyRegions(currentRegions, currentRAG,
+				Canvas.getEscaperLocation(),
+				Canvas.getIntruderLocations(),
+				Canvas.getEscapePointLocation());
+				
+				logArea.appendText("Region Classification Complete:\n");
+				int roomCount = 0;
+				for (Region region : currentRegions) {
+				if (region.getType() != RegionTypes.WALL_STRUCTURE && region.getType() != RegionTypes.OPEN_SPACE) {
+				//logArea.appendText(" - " + region.toString() + " (Neighbors in RAG: " + (currentRAG.adjList.containsKey(region) ? currentRAG.getNodeNeighbours(region).size() : "N/A") + ")\n");
+				}
+				switch(region.getType()){
+				case ROOM: roomCount++; break;
+				//case CORRIDOR: corridorCount++; break;
+				//case JUNCTION: junctionCount++; break;
+				//case DEAD_END_PASSAGE: deadEndCount++; break;
+				}
+				}
+				logArea.appendText(String.format("Summary: Rooms: %d\n",roomCount));
+				Canvas.setRegionsForDrawing(currentRegions); // Need to add this method to MyCanvas
+				Canvas.render(); // Or a specific render method
+
+
+
+
 			// Create/Recreate the graph from the current canvas state
 			logArea.appendText("Building graph from canvas...\n");
 			converter =  new GraphConverter();
